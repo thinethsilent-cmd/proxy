@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FF Proxy Server - Exclusive Drop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #000000;
+            font-family: 'Inter', sans-serif;
+            /* Prevent text selection */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .card-bg {
+            background-color: #0f0f0f;
+            border: 1px solid #1a1a1a;
+        }
+        .icon-container {
+            background-color: #1a1a1a;
+            border-radius: 1.5rem;
+        }
+        .exclusive-badge {
+            background: linear-gradient(90deg, #ff0080 0%, #ff00ff 100%);
+        }
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen text-white p-4" oncontextmenu="return false;">
+
+    <!-- Header -->
+    <h1 class="text-3xl font-bold mb-12 tracking-tight text-center">Exclusive Creator Drops</h1>
+
+    <!-- Main Card -->
+    <div class="card-bg w-full max-w-2xl p-8 md:p-12 rounded-2xl relative overflow-hidden">
+        
+        <div class="flex flex-col md:flex-row gap-8 items-start">
+            <!-- Icon/Thumbnail Section -->
+            <div class="relative flex-shrink-0">
+                <div class="exclusive-badge absolute -top-3 -right-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider z-10">
+                    Premium
+                </div>
+                <div class="icon-container w-32 h-32 flex items-center justify-center">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#00c3ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-server">
+                        <rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="flex-grow">
+                <h2 class="text-2xl font-bold mb-3">FF Proxy Server Pro</h2>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                    Get the lowest ping for Free Fire with our optimized proxy server.<br>
+                    Stable connection, zero lag, and bypass regional restrictions.
+                </p>
+
+                <!-- Stats -->
+                <div class="flex flex-wrap gap-6 text-sm mb-8">
+                    <div class="flex items-center gap-2 text-cyan-400">
+                        <i data-lucide="zap" class="w-4 h-4 fill-current"></i>
+                        <span>Ultra Low Latency</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-cyan-400">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        <span>Anti-Ban Protected</span>
+                    </div>
+                </div>
+
+                <!-- Action Button Container -->
+                <div id="action-container" class="space-y-4">
+                    <!-- Progress Section (Hidden initially) -->
+                    <div id="progress-container" class="hidden">
+                        <div class="flex justify-between text-xs mb-2 text-gray-400">
+                            <span id="ad-status">Verifying Ad View...</span>
+                            <span id="ad-count">0/5</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
+                            <div id="progress-fill" class="bg-cyan-500 h-1.5 rounded-full progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Main Unlock Button -->
+                    <button id="unlock-btn" onclick="startUnlocking()" class="w-full py-4 border border-gray-700 rounded-full flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all duration-300 font-medium group">
+                        <span id="btn-text">Unlock Proxy Settings</span>
+                        <i id="btn-icon" data-lucide="lock" class="w-5 h-5 group-hover:text-black"></i>
+                    </button>
+
+                    <!-- Hidden Download Link -->
+                    <a id="download-link" href="https://www.mediafire.com/file/kos7jcqdgabfiix/localconfig.json/file" target="_blank" class="hidden w-full py-4 bg-cyan-500 text-black rounded-full flex items-center justify-center gap-3 hover:bg-cyan-400 transition-all duration-300 font-bold">
+                        Access Proxy Server
+                        <i data-lucide="unlock" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-8 bg-white text-black px-6 py-3 rounded-xl font-medium translate-y-24 transition-transform duration-300 shadow-lg">
+        Ad watched successfully!
+    </div>
+
+    <script>
+        // --- Security Scripts ---
+        
+        // Disable Right Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable Keyboard Shortcuts
+        document.onkeydown = function(e) {
+            // Disable F12
+            if(e.keyCode == 123) {
+                return false;
+            }
+            // Disable Ctrl+Shift+I (Inspect)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            // Disable Ctrl+Shift+C (Inspect Element)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+                return false;
+            }
+            // Disable Ctrl+Shift+J (Console)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                return false;
+            }
+            // Disable Ctrl+U (View Source)
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
+            // Disable Ctrl+S (Save Page)
+            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) {
+                return false;
+            }
+        };
+
+        // --- App Logic ---
+
+        // Initialize icons
+        lucide.createIcons();
+
+        let adsWatched = 0;
+        const totalAds = 5;
+        const unlockBtn = document.getElementById('unlock-btn');
+        const btnText = document.getElementById('btn-text');
+        const progressContainer = document.getElementById('progress-container');
+        const progressFill = document.getElementById('progress-fill');
+        const adCountText = document.getElementById('ad-count');
+        const downloadLink = document.getElementById('download-link');
+        const toast = document.getElementById('toast');
+
+        function showToast(message) {
+            toast.innerText = message;
+            toast.classList.remove('translate-y-24');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24');
+            }, 2000);
+        }
+
+        function startUnlocking() {
+            if (adsWatched >= totalAds) return;
+
+            progressContainer.classList.remove('hidden');
+            unlockBtn.disabled = true;
+            unlockBtn.style.opacity = "0.5";
+            btnText.innerText = "Watching Ad...";
+
+            setTimeout(() => {
+                adsWatched++;
+                updateProgress();
+                
+                if (adsWatched < totalAds) {
+                    unlockBtn.disabled = false;
+                    unlockBtn.style.opacity = "1";
+                    btnText.innerText = "Watch Next Ad";
+                    showToast(`Step ${adsWatched}/${totalAds} complete!`);
+                } else {
+                    completeUnlocking();
+                }
+            }, 2000);
+        }
+
+        function updateProgress() {
+            const percentage = (adsWatched / totalAds) * 100;
+            progressFill.style.width = percentage + "%";
+            adCountText.innerText = `${adsWatched}/${totalAds}`;
+        }
+
+        function completeUnlocking() {
+            unlockBtn.classList.add('hidden');
+            progressContainer.classList.add('hidden');
+            downloadLink.classList.remove('hidden');
+            showToast("Server Credentials Unlocked!");
+        }
+    </script>
+</body>
+</html>
