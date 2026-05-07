@@ -9,34 +9,55 @@
     <!-- Ad Multitag Script -->
     <script src="https://quge5.com/88/tag.min.js" data-zone="237179" async data-cfasync="false"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
         body {
-            background-color: #000000;
-            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             user-select: none;
             -webkit-user-select: none;
             overflow-x: hidden;
+            color: #ffffff;
         }
-        .card-bg {
-            background-color: #0f0f0f;
-            border: 1px solid #1a1a1a;
+
+        /* Animated Background Particles */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #0044ff22 0%, transparent 50%),
+                        radial-gradient(circle at 10% 10%, #ff008011 0%, transparent 30%);
+            z-index: -1;
         }
-        .icon-container {
-            background-color: #1a1a1a;
-            border-radius: 1.5rem;
+
+        .glass-card {
+            background: rgba(15, 15, 15, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
+
         .exclusive-badge {
-            background: linear-gradient(90deg, #ff0080 0%, #ff00ff 100%);
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
         }
-        .progress-bar {
-            transition: width 0.3s ease-in-out;
+
+        .progress-bar-glow {
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
         }
-        .countdown-pulse {
-            animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+        .step-node {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
+
+        .step-active {
+            border-color: #06b6d4;
+            background: rgba(6, 182, 212, 0.1);
+            transform: scale(1.1);
         }
+
         /* Adblock Alert Overlay */
         #adblock-overlay {
             display: none;
@@ -45,212 +66,262 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.98);
             z-index: 9999;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 20px;
+            padding: 24px;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 2s infinite;
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen text-white p-4" oncontextmenu="return false;">
+<body class="flex flex-col items-center justify-center min-h-screen p-4" oncontextmenu="return false;">
+
+    <div class="bg-glow"></div>
 
     <!-- Adblock Detection Overlay -->
     <div id="adblock-overlay">
-        <div class="bg-red-500/10 border border-red-500 p-8 rounded-3xl max-w-md">
-            <div class="bg-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i data-lucide="shield-alert" class="w-8 h-8 text-white"></i>
+        <div class="glass-card p-10 rounded-[2.5rem] max-w-md border-red-500/30">
+            <div class="bg-red-500 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8 rotate-12">
+                <i data-lucide="shield-off" class="w-10 h-10 text-white"></i>
             </div>
-            <h2 class="text-2xl font-bold mb-4">Adblock Detected!</h2>
-            <p class="text-gray-300 mb-6">We detected that you are using an AdBlocker. To unlock this exclusive content, please disable your adblocker and refresh the page.</p>
-            <button onclick="location.reload()" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition-colors">
-                I've Disabled It, Refresh
+            <h2 class="text-3xl font-extrabold mb-4 tracking-tight">Security Alert</h2>
+            <p class="text-gray-400 mb-8 leading-relaxed">To ensure server integrity and support our creators, please disable your <b>AdBlocker</b>. The system will auto-verify once disabled.</p>
+            <button onclick="location.reload()" class="w-full bg-white text-black py-4 rounded-2xl font-bold hover:bg-cyan-400 transition-all active:scale-95">
+                Refresh Dashboard
             </button>
         </div>
     </div>
 
-    <!-- Header -->
-    <h1 class="text-3xl font-bold mb-12 tracking-tight text-center">Exclusive Creator Drops</h1>
+    <!-- Header Section -->
+    <div class="text-center mb-10">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-4">
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span class="text-xs font-bold uppercase tracking-widest text-gray-400">System Online</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">
+            Proxy Access Center
+        </h1>
+    </div>
 
-    <!-- Main Card -->
-    <div class="card-bg w-full max-w-2xl p-8 md:p-12 rounded-2xl relative overflow-hidden">
-        
-        <div class="flex flex-col md:flex-row gap-8 items-start">
-            <!-- Icon Section -->
-            <div class="relative flex-shrink-0">
-                <div class="exclusive-badge absolute -top-3 -right-3 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider z-10">
-                    Premium
-                </div>
-                <div class="icon-container w-32 h-32 flex items-center justify-center">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#00c3ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-server">
-                        <rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Content Section -->
-            <div class="flex-grow">
-                <h2 class="text-2xl font-bold mb-3">FF Proxy Server Pro</h2>
-                <p class="text-gray-400 text-sm leading-relaxed mb-6">
-                    Get the lowest ping for Free Fire with our optimized proxy server.<br>
-                    Stable connection, zero lag, and bypass regional restrictions.
-                </p>
-
-                <!-- Stats -->
-                <div class="flex flex-wrap gap-6 text-sm mb-8">
-                    <div class="flex items-center gap-2 text-cyan-400">
-                        <i data-lucide="zap" class="w-4 h-4 fill-current"></i>
-                        <span>Ultra Low Latency</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-cyan-400">
-                        <i data-lucide="shield-check" class="w-4 h-4"></i>
-                        <span>Anti-Ban Protected</span>
-                    </div>
-                </div>
-
-                <!-- Action Button Container -->
-                <div id="action-container" class="space-y-4">
-                    <!-- Progress Section -->
-                    <div id="progress-container" class="hidden">
-                        <div class="flex justify-between text-xs mb-2 text-gray-400">
-                            <span id="ad-status" class="flex items-center gap-2">
-                                <span id="timer-text" class="text-cyan-400 font-bold"></span>
-                            </span>
-                            <span id="ad-count">0/5</span>
+    <!-- Main Dashboard -->
+    <div class="glass-card w-full max-w-3xl rounded-[3rem] p-1 overflow-hidden">
+        <div class="p-8 md:p-12">
+            <div class="flex flex-col lg:flex-row gap-12">
+                
+                <!-- Left: Branding & Status -->
+                <div class="lg:w-1/3 flex flex-col items-center lg:items-start">
+                    <div class="relative group mb-6">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                        <div class="relative bg-[#0a0a0a] w-32 h-32 rounded-[2rem] flex items-center justify-center border border-white/10">
+                            <i data-lucide="cpu" class="w-14 h-14 text-cyan-400"></i>
                         </div>
-                        <div class="w-full bg-gray-800 rounded-full h-1.5 mb-4">
-                            <div id="progress-fill" class="bg-cyan-500 h-1.5 rounded-full progress-bar" style="width: 0%"></div>
+                        <div class="exclusive-badge absolute -top-2 -right-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter z-10 text-black">
+                            V.2.0 PRO
                         </div>
                     </div>
-
-                    <!-- Main Unlock Button -->
-                    <button id="unlock-btn" onclick="handleAdClick()" class="w-full py-4 border border-gray-700 rounded-full flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all duration-300 font-medium group">
-                        <span id="btn-text">Unlock Proxy Settings</span>
-                        <i id="btn-icon" data-lucide="lock" class="w-5 h-5 group-hover:text-black"></i>
-                    </button>
-
-                    <!-- Hidden Download Link -->
-                    <a id="download-link" href="https://www.mediafire.com/file/kos7jcqdgabfiix/localconfig.json/file" target="_blank" class="hidden w-full py-4 bg-cyan-500 text-black rounded-full flex items-center justify-center gap-3 hover:bg-cyan-400 transition-all duration-300 font-bold">
-                        Access Proxy Server
-                        <i data-lucide="unlock" class="w-5 h-5"></i>
-                    </a>
+                    
+                    <div class="space-y-4 w-full">
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5">
+                            <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                                <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase text-gray-500 font-bold">Region</p>
+                                <p class="text-sm font-semibold">Global Optimized</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5">
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                <i data-lucide="zap" class="w-4 h-4 text-purple-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase text-gray-500 font-bold">Ping</p>
+                                <p class="text-sm font-semibold">~15ms Latency</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Right: Interaction -->
+                <div class="lg:w-2/3">
+                    <div class="mb-8 text-center lg:text-left">
+                        <h2 class="text-2xl font-bold mb-2">FF Proxy Server Pro</h2>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Complete the security verification steps below to generate your unique proxy credentials and unlock the high-speed server file.
+                        </p>
+                    </div>
+
+                    <!-- Visual Step Tracker -->
+                    <div class="flex justify-between mb-10 px-2">
+                        <template id="step-template">
+                            <div class="step-node w-10 h-10 rounded-xl border-2 border-white/10 flex items-center justify-center text-xs font-bold text-gray-500">
+                                1
+                            </div>
+                        </template>
+                        <div id="steps-container" class="flex justify-between w-full relative">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Progress Indicator -->
+                    <div id="progress-section" class="hidden mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div class="flex justify-between items-end mb-3">
+                            <div>
+                                <p id="timer-label" class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1">Authenticating</p>
+                                <p id="timer-val" class="text-xl font-black tabular-nums">10.00s</p>
+                            </div>
+                            <p class="text-xs font-bold text-gray-500" id="step-counter">STEP 1 OF 5</p>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-3 overflow-hidden border border-white/5">
+                            <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 to-blue-600 h-full w-0 transition-all duration-300 progress-bar-glow"></div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="space-y-4">
+                        <button id="main-action-btn" onclick="processStep()" class="relative overflow-hidden w-full py-5 bg-white text-black rounded-[1.5rem] font-extrabold flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 shimmer-btn">
+                            <span id="btn-label">GENERATE ACCESS KEY</span>
+                            <i data-lucide="key" class="w-5 h-5"></i>
+                        </button>
+
+                        <a id="download-btn" href="https://www.mediafire.com/file/kos7jcqdgabfiix/localconfig.json/file" target="_blank" class="hidden w-full py-5 bg-gradient-to-r from-green-400 to-cyan-500 text-black rounded-[1.5rem] font-black flex items-center justify-center gap-3 animate-bounce shadow-xl shadow-green-500/20">
+                            DOWNLOAD CONFIG FILE
+                            <i data-lucide="download-cloud" class="w-6 h-6"></i>
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-8 bg-white text-black px-6 py-3 rounded-xl font-medium translate-y-24 transition-transform duration-300 shadow-lg">
-        Ad watched successfully!
+    <!-- Security Warning Footnote -->
+    <p class="mt-8 text-gray-600 text-[10px] uppercase font-bold tracking-[0.2em] flex items-center gap-2">
+        <i data-lucide="shield-check" class="w-3 h-3"></i>
+        End-to-End Encrypted Tunnel Active
+    </p>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 glass-card px-8 py-4 rounded-2xl border-cyan-500/30 flex items-center gap-3 translate-y-32 transition-transform duration-500 z-50">
+        <div class="w-2 h-2 rounded-full bg-cyan-500"></div>
+        <span id="toast-msg" class="text-sm font-bold">Ad Verified Successfully</span>
     </div>
 
     <script>
-        // Security: Disable Inspect & Right Click
+        // Security logic
         document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = (e) => {
+        document.onkeydown = e => {
             if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 67, 74].includes(e.keyCode)) || (e.ctrlKey && [85, 83].includes(e.keyCode))) return false;
         };
 
         lucide.createIcons();
 
-        // --- Adblock Detection ---
-        async function detectAdBlock() {
-            let adBlockEnabled = false;
-            const googleAdUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-            
+        // Adblock Detection
+        async function checkAdBlock() {
             try {
-                // Method 1: Fetch a known ad script
-                const response = await fetch(new Request(googleAdUrl), { method: 'HEAD', mode: 'no-cors' });
-                adBlockEnabled = false;
+                const response = await fetch(new Request('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'), { method: 'HEAD', mode: 'no-cors' });
             } catch (e) {
-                adBlockEnabled = true;
-            }
-
-            // Method 2: Check for global variables usually set by ad scripts
-            if (!adBlockEnabled && typeof window.atob === 'undefined') { // Generic check
-                 // Some adblockers hide specific elements
-            }
-
-            if (adBlockEnabled) {
                 document.getElementById('adblock-overlay').style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             }
         }
+        window.onload = checkAdBlock;
 
-        // Run detection on load
-        window.onload = detectAdBlock;
+        // Multi-Step Logic
+        const totalSteps = 5;
+        let currentStep = 0;
+        const adUrl = "https://omg10.com/4/10977233";
 
-        // --- App Logic ---
-        let adsWatched = 0;
-        const totalAds = 5;
-        const adLink = "https://omg10.com/4/10977233";
-        
-        const unlockBtn = document.getElementById('unlock-btn');
-        const btnText = document.getElementById('btn-text');
-        const progressContainer = document.getElementById('progress-container');
-        const progressFill = document.getElementById('progress-fill');
-        const adCountText = document.getElementById('ad-count');
-        const timerText = document.getElementById('timer-text');
-        const downloadLink = document.getElementById('download-link');
-        const toast = document.getElementById('toast');
-
-        function showToast(message) {
-            toast.innerText = message;
-            toast.classList.remove('translate-y-24');
-            setTimeout(() => toast.classList.add('translate-y-24'), 2000);
+        // Initialize Step UI
+        const container = document.getElementById('steps-container');
+        for(let i=1; i<=totalSteps; i++) {
+            const div = document.createElement('div');
+            div.className = `step-node w-10 h-10 rounded-xl border-2 border-white/10 flex items-center justify-center text-xs font-bold text-gray-500 step-item-${i}`;
+            div.innerText = i;
+            container.appendChild(div);
         }
 
-        function handleAdClick() {
-            if (adsWatched >= totalAds) return;
-            window.open(adLink, '_blank');
-            startCountdown();
+        function updateStepUI() {
+            for(let i=1; i<=totalSteps; i++) {
+                const node = document.querySelector(`.step-item-${i}`);
+                if(i <= currentStep) {
+                    node.classList.add('border-cyan-500', 'text-cyan-400', 'bg-cyan-500/10');
+                    node.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+                } else if (i === currentStep + 1) {
+                    node.classList.add('step-active');
+                }
+            }
+            lucide.createIcons();
+        }
+        updateStepUI();
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('translate-y-32');
+            setTimeout(() => t.classList.add('translate-y-32'), 3000);
         }
 
-        function startCountdown() {
-            let secondsLeft = 10;
-            progressContainer.classList.remove('hidden');
-            unlockBtn.disabled = true;
-            unlockBtn.style.opacity = "0.5";
-            btnText.innerText = "Please wait...";
+        function processStep() {
+            if(currentStep >= totalSteps) return;
+
+            window.open(adUrl, '_blank');
             
-            const timer = setInterval(() => {
-                timerText.innerText = `Keep ad open for ${secondsLeft}s...`;
-                timerText.classList.add('countdown-pulse');
-                secondsLeft--;
+            const btn = document.getElementById('main-action-btn');
+            const progressSec = document.getElementById('progress-section');
+            const progressBar = document.getElementById('progress-bar');
+            const timerVal = document.getElementById('timer-val');
+            const stepCount = document.getElementById('step-counter');
 
-                if (secondsLeft < 0) {
-                    clearInterval(timer);
-                    adsWatched++;
-                    updateProgress();
-                    timerText.innerText = "Ad Verified!";
-                    timerText.classList.remove('countdown-pulse');
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            document.getElementById('btn-label').innerText = "VERIFYING VIEW...";
+            progressSec.classList.remove('hidden');
 
-                    if (adsWatched < totalAds) {
-                        unlockBtn.disabled = false;
-                        unlockBtn.style.opacity = "1";
-                        btnText.innerText = "Watch Next Ad";
-                        showToast(`Step ${adsWatched}/${totalAds} complete!`);
+            let timeLeft = 1000; // 10.00 seconds in centiseconds for smooth transition
+            const interval = setInterval(() => {
+                timeLeft--;
+                timerVal.innerText = (timeLeft / 100).toFixed(2) + "s";
+                progressBar.style.width = ((1000 - timeLeft) / 10) + "%";
+                stepCount.innerText = `STEP ${currentStep + 1} OF ${totalAds}`;
+
+                if(timeLeft <= 0) {
+                    clearInterval(interval);
+                    currentStep++;
+                    updateStepUI();
+                    
+                    if(currentStep < totalSteps) {
+                        btn.disabled = false;
+                        btn.style.opacity = "1";
+                        document.getElementById('btn-label').innerText = "CONTINUE TO NEXT STEP";
+                        showToast(`Step ${currentStep} Verified`);
                     } else {
-                        completeUnlocking();
+                        btn.classList.add('hidden');
+                        progressSec.classList.add('hidden');
+                        document.getElementById('download-btn').classList.remove('hidden');
+                        showToast("Access Granted - File Ready");
                     }
                 }
-            }, 1000);
-        }
-
-        function updateProgress() {
-            const percentage = (adsWatched / totalAds) * 100;
-            progressFill.style.width = percentage + "%";
-            adCountText.innerText = `${adsWatched}/${totalAds}`;
-        }
-
-        function completeUnlocking() {
-            unlockBtn.classList.add('hidden');
-            progressContainer.classList.add('hidden');
-            downloadLink.classList.remove('hidden');
-            showToast("Server Credentials Unlocked!");
+            }, 10);
         }
     </script>
 </body>
